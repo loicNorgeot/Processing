@@ -75,8 +75,8 @@ class Mesh {
         }
       }
       
-      color[] palette = {color(0,0,255), color(255), color(255,0,0)};
-      //color[] palette = {color(0,0,255), color(100,100,255), color(0,255,0), color(255,255,0), color(255,0,0)};
+      //color[] palette = {color(0,0,255), color(255), color(255,0,0)};
+      color[] palette = {color(0,0,255), color(100,100,255), color(0,255,0), color(255,255,0), color(255,0,0)};
       colors = new color[values.length];
       float mi = min(values);
       float ma = max(values);
@@ -106,7 +106,7 @@ class Mesh {
     }
     geometry.endShape();
     geometry.setStroke(false);
-    geometry.setStroke(color(255));
+    geometry.setStroke(color(255,75));
   }
   
   void scaleAndTranslate(){
