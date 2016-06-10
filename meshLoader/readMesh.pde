@@ -8,6 +8,7 @@ class Mesh {
   float[][] verts;
   int[][]   faces;
   float[]   values;
+  color[]   colors;
   PShape geometry;
   
   Mesh(String filename){
@@ -58,6 +59,7 @@ class Mesh {
       String LINES[] = loadStrings(solFile);
       boolean sFound = false;
       int sBegin = 0;
+          
       for (int i = 0; i < LINES.length; i++) {
         String[] s = LINES[i].split("\\s+");
         
@@ -73,6 +75,15 @@ class Mesh {
         }
       }
       
+      color[] palette = {color(0,0,255), color(255), color(255,0,0)};
+      //color[] palette = {color(0,0,255), color(100,100,255), color(0,255,0), color(255,255,0), color(255,0,0)};
+      colors = new color[values.length];
+      float mi = min(values);
+      float ma = max(values);
+      for (int i = 0; i < colors.length; i++) {
+        float f = map(values[i], mi, ma, 0, palette.length-1.0001);
+        colors[i] = lerpColor(palette[int(f)], palette[int(f+1)], f%1);
+      }
     }
     else{
       println("No associated solution file");
@@ -82,21 +93,20 @@ class Mesh {
   void createGeometry(){
     geometry = createShape();
     geometry.beginShape(TRIANGLES); 
-    //geometry.stroke(255);
-    //geometry.fill(255,0,0);
-    geometry.noStroke();
-    float mi = min(values), ma = max(values);
+    
     for(int i = 0 ; i < faces.length ; i++){
-      geometry.fill(map(values[faces[i][0]-1], mi, ma, 0, 255));
+      geometry.fill(colors[faces[i][0]-1]);
       geometry.vertex(verts[faces[i][0]-1][0], verts[faces[i][0]-1][1], verts[faces[i][0]-1][2]);
       
-      geometry.fill(map(values[faces[i][1]-1], mi, ma, 0, 255));
+      geometry.fill(colors[faces[i][1]-1]);
       geometry.vertex(verts[faces[i][1]-1][0], verts[faces[i][1]-1][1], verts[faces[i][1]-1][2]);
       
-      geometry.fill(map(values[faces[i][2]-1], mi, ma, 0, 255));
+      geometry.fill(colors[faces[i][2]-1]);
       geometry.vertex(verts[faces[i][2]-1][0], verts[faces[i][2]-1][1], verts[faces[i][2]-1][2]);
     }
     geometry.endShape();
+    geometry.setStroke(false);
+    geometry.setStroke(color(255));
   }
   
   void scaleAndTranslate(){
